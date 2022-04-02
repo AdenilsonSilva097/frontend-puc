@@ -71,18 +71,23 @@ const FormLogin: React.FC = () => {
       navigate("/office/dashboard");
     } else {
 
+      const { data } = await api.get("/permission-groups");
+
+      const permissionGroupOperator = data.find(
+        (permissionGroup: any) => permissionGroup.name === "OPERADOR"
+      );
+
       const newUser = {
         name: `${givenName} ${familyName}`,
         email,
-        permissionGroup: "OPERATOR"
+        permissionGroup: permissionGroupOperator.id
       };
 
       await api.post("/users", newUser).then(() => {
+        localStorage.setItem("@user", JSON.stringify(newUser));
         setUserLogged(true);
         navigate("/office/dashboard");
       });
-
-      localStorage.setItem("@user", JSON.stringify(newUser));
     }
   };
 
