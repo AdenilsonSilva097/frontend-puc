@@ -54,6 +54,10 @@ const FormLogin: React.FC = () => {
     });
   };
 
+  const responseFailureGoogle = (response: any) => {
+    console.log(response);
+  };
+
   const responseGoogle = async (response: any) => {
     const { email, familyName, givenName } = response.profileObj;
 
@@ -103,6 +107,7 @@ const FormLogin: React.FC = () => {
           onSuccess={responseGoogle}
           cookiePolicy="single_host_origin"
           className="google-login-button"
+          onFailure={responseFailureGoogle}
         />
       </Form>
       <Snackbar
