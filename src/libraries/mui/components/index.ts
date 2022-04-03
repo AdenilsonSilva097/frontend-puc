@@ -5,5 +5,5 @@ export {
   Snackbar, Alert, Table, TableHead, TableBody,
   TableRow, TableCell, Dialog, DialogTitle,
   FormControlLabel, Checkbox, TableContainer,
-  Fab
+  Fab, DialogActions, DialogContent, DialogContentText
 } from "@mui/material";

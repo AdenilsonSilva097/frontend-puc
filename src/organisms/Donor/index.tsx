@@ -16,22 +16,46 @@ import {
 
 import * as Styled from "./styles";
 import DonorForm from "../../molecules/DonorForm";
+import SearchInput from "../../molecules/SearchInput";
 
 const Donor: React.FC = () => {
 
   const [donors, setDonors] = React.useState<any[]>([]);
+  const [selectedDonors, setSelectedDonors] = React.useState<any[]>([]);
+  const [filterDonors, setFilterDonors] = React.useState("");
   const [currentDonor, setCurrentDonor] = React.useState<any>({});
   const [openDonorForm, setOpenDonorForm] = React.useState(false);
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState("");
 
   const getDatabaseDonors = async () => {
     try {
       const { data: donorsData } = await api.get("/donors");
 
       setDonors(donorsData);
+      setSelectedDonors(donorsData);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleSearchInputChange = (value: string) => {
+    setFilterDonors(value);
+
+    // if (value.length > 3) {
+    //   setSelectedDonors(donors.filter(
+    //     (donor: any) => return (donor.name.toLowerCase().includes(value.toLowerCase()))
+    //   ));
+    // }
+
+    // const filter = donors.filter(
+    //   (donor: any) => donor.name.toLowerCase().includes(value.toLowerCase())
+    //   || donor.setor.toLowerCase().includes(value.toLowerCase())
+    //   || donor.valor.toLowerCase().includes(value.toLowerCase())
+    //   || donor.melhorData.toLowerCase().includes(value.toLowerCase())
+    // );
+
+    // setFilterDonors(filter);
   };
 
   const handleopenDonorForm = (donor: any) => {
@@ -46,6 +70,13 @@ const Donor: React.FC = () => {
 
   const onSaveDonor = () => {
     setSnackbarOpen(true);
+    setSnackbarMessage("Doador salvo com sucesso!");
+    handleDonorFormClose();
+  };
+
+  const onDeleteDonor = () => {
+    setSnackbarOpen(true);
+    setSnackbarMessage("Doador excluído com sucesso!");
     handleDonorFormClose();
   };
 
@@ -53,12 +84,29 @@ const Donor: React.FC = () => {
     getDatabaseDonors();
   }, []);
 
+  React.useEffect(() => {
+    const filter = donors.filter(
+      (donor: any) => donor.nome.toLowerCase().includes(filterDonors.toLowerCase())
+        || donor.setor.toLowerCase().includes(filterDonors.toLowerCase())
+        || donor.valor.toString().toLowerCase().includes(filterDonors.toLowerCase())
+        || donor.melhorData.toString().toLowerCase().includes(filterDonors.toLowerCase())
+    );
+
+    setSelectedDonors(filter);
+  }, [filterDonors]);
+
   if (donors.length === 0) {
     return <div>Carregando dados...</div>;
   }
 
   return (
     <Styled.Container>
+      <SearchInput
+        sizeInput="small"
+        value={filterDonors}
+        onChange={(evt) => handleSearchInputChange(evt.currentTarget.value)}
+        clearInputValue={() => setFilterDonors("")}
+      />
       <TableContainer>
         <Table aria-label="permissions table">
           <TableHead sx={{ position: "sticky", top: "0", backgroundColor: "white" }}>
@@ -72,7 +120,12 @@ const Donor: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {donors.map((donor, index) => {
+            {selectedDonors.length === 0 && (
+              <TableRow>
+                <TableCell align="left">Nenhum doador encontrado</TableCell>
+              </TableRow>
+            )}
+            {selectedDonors.map((donor, index) => {
 
               const formattedValue = Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(donor.valor);
 
@@ -99,14 +152,14 @@ const Donor: React.FC = () => {
         open={openDonorForm}
         title="Cadastro de doador"
       >
-        <DonorForm onSave={onSaveDonor} currentDonor={currentDonor} />
+        <DonorForm onSave={onSaveDonor} onDelete={onDeleteDonor} currentDonor={currentDonor} />
       </FormDialog>
       <Styled.FabContainer onClick={() => handleopenDonorForm(null)} size="large">
         <Add fontSize="large" />
       </Styled.FabContainer>
       <Snackbar
         open={snackbarOpen}
-        message={!currentDonor ? "Doador criado com sucesso!" : "Doador alterado com sucesso!"}
+        message={snackbarMessage}
         onClose={() => setSnackbarOpen(false)}
         severity="success"
       />

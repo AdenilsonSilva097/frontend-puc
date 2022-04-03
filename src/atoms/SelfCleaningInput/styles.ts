@@ -1,6 +1,10 @@
 import styled from "styled-components";
 
-const SelfCleaningInputContainer = styled.div`
+interface SelfCleaningInputContainerStyles {
+  sizeInput: "small" | "large";
+}
+
+const SelfCleaningInputContainer = styled.div<SelfCleaningInputContainerStyles>`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -8,7 +12,7 @@ const SelfCleaningInputContainer = styled.div`
 
   > input {
     flex-grow: 1;
-    font-size: 19px;
+    font-size: ${(props) => (props.sizeInput === "small" ? "14px" : "16px")};
     border: none;
     outline: none;
     background-color: inherit;
@@ -20,11 +24,11 @@ const SelfCleaningInputContainer = styled.div`
   }
 `;
 
-const CloseButton = styled.div`
+const CloseButton = styled.div<SelfCleaningInputContainerStyles>`
   background-color: gray;
   color: white;
-  height: 22px;
-  width: 22px;
+  height: ${(props) => (props.sizeInput === "small" ? "20px" : "22px")};
+  width: ${(props) => (props.sizeInput === "small" ? "20px" : "22px")};
   border-radius: 50%;
   text-align: center;
   font-size: 19px;

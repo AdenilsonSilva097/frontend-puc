@@ -22,7 +22,13 @@ const FormSignUp: React.FC = () => {
       if (formIsValid) {
 
         try {
-          const newUser = { ...formData, permissionGroup: "OPERATOR" };
+          const { data } = await api.get("/permission-groups");
+
+          const permissionGroupOperator = data.find(
+            (permissionGroup: any) => permissionGroup.name === "OPERADOR"
+          );
+
+          const newUser = { ...formData, permissionGroup: permissionGroupOperator.id };
 
           await api.post("/users", newUser);
 

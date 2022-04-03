@@ -2,39 +2,27 @@ import React, { useState } from "react";
 
 import { SelfCleaningInputContainer, CloseButton } from "./styles";
 
-interface SelfCleaningInputProps {
+interface SelfCleaningInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   inputRef: React.RefObject<HTMLInputElement>
+  sizeInput: "small" | "large";
+  clearInputValue: () => void;
 }
 
-const SelfCleaningInput: React.FC<SelfCleaningInputProps> = ({ inputRef }) => {
-
-  const [inputValue, setInputValue] = useState("");
-
-  const handleInputValue = (event: React.FormEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget;
-
-    setInputValue(value);
-  };
-
-  const handleCloseButtonClick = () => {
-    setInputValue("");
-    inputRef.current?.focus();
-  };
-
-  return (
-    <SelfCleaningInputContainer>
-      <input
-        type="InputValue"
-        name="searchInput"
-        id="search_input"
-        placeholder="Procurar"
-        value={inputValue}
-        onChange={handleInputValue}
-        ref={inputRef}
-      />
-      {inputValue !== "" ? <CloseButton onClick={handleCloseButtonClick}>x</CloseButton> : null}
-    </SelfCleaningInputContainer>
-  );
-};
+const SelfCleaningInput: React.FC<SelfCleaningInputProps> = ({
+  inputRef, sizeInput, clearInputValue, ...rest
+}) => (
+  <SelfCleaningInputContainer sizeInput={sizeInput}>
+    <input
+      type="InputValue"
+      name="searchInput"
+      id="search_input"
+      placeholder="Procurar"
+      autoComplete="off"
+      ref={inputRef}
+      {...rest}
+    />
+    {rest.value !== "" ? <CloseButton onClick={clearInputValue} sizeInput={sizeInput}>x</CloseButton> : null}
+  </SelfCleaningInputContainer>
+);
 
 export default SelfCleaningInput;

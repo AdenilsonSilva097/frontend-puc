@@ -5,13 +5,16 @@ import ptBrLocale from "date-fns/locale/pt-BR";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
+import { get } from "http";
 import SubmitButton from "../../atoms/SubmitButton";
 import NumberFormatCustom from "../../atoms/NumberFormat";
 
 import Yup from "../../libraries/yup";
 import { AdapterDateFns, DatePicker, LocalizationProvider } from "../../libraries/mui/lab";
 import {
-  TextField, FormControl, InputLabel, Select, MenuItem, FormHelperText, FormControlLabel, Checkbox
+  TextField, FormControl, InputLabel, Select, MenuItem,
+  FormHelperText, FormControlLabel, Checkbox, Button,
+  Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
 } from "../../libraries/mui/components";
 
 import { handleErrorMessage } from "../../helpers/utils";
@@ -67,12 +70,15 @@ const schema = Yup.object().shape({
 interface DonorFormProps {
   currentDonor?: any;
   onSave: () => void;
+  onDelete: () => void;
 }
 
-const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave }) => {
+const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave, onDelete }) => {
+
+  const [showConfirmDelete, setShowConfirmDelete] = React.useState(false);
 
   const {
-    control, setValue, handleSubmit, formState: { errors: formErrors }, reset
+    control, setValue, handleSubmit, getValues, formState: { errors: formErrors }, reset
   } = useForm<IFormInputs>({
     resolver: yupResolver(schema),
     reValidateMode: "onChange",
@@ -99,6 +105,16 @@ const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave }) => {
     } catch (error) {
       console.log(error);
 
+    }
+  };
+
+  const handleClickDeleteButton = async () => {
+    try {
+      await api.delete(`/donors/${currentDonor.id}`);
+      setShowConfirmDelete(false);
+      onDelete();
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -466,14 +482,27 @@ const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave }) => {
             render={({ field }) => (
               <FormControlLabel
                 {...field}
-                control={<Checkbox defaultChecked />}
+                control={<Checkbox value={field.value} />}
                 label="Inativar doador"
                 sx={{ paddingBottom: "10px" }}
               />
             )}
           />
         </Styled.FormFields>
-        <SubmitButton text="Confirmar" />
+        <Styled.FormActions>
+          <SubmitButton text="Confirmar" />
+          {!showConfirmDelete && currentDonor
+            && (
+            <Styled.DeleteButton variant="outlined" onClick={() => setShowConfirmDelete(true)}>
+              Excluir
+            </Styled.DeleteButton>
+            )}
+          {showConfirmDelete && (
+            <Styled.DeleteButton variant="outlined" onClick={handleClickDeleteButton}>
+              Efetivar exclusão
+            </Styled.DeleteButton>
+          )}
+        </Styled.FormActions>
       </Styled.Form>
     </Styled.Container>
   );

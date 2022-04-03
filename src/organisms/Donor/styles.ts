@@ -12,6 +12,12 @@ export const Container = styled.div`
   justify-content: flex-start;
   overflow: hidden;
   position: absolute;
+  padding-top: 10px;
+
+  > :first-child {
+    /* align-self: flex-end;
+    margin-right: 10px; */
+  }
 
   .MuiTableContainer-root {
     height: 100%;

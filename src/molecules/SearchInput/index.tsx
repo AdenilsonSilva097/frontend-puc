@@ -7,18 +7,30 @@ import SelfCleaningInput from "../../atoms/SelfCleaningInput";
 
 import { SearchInputContainer } from "./styles";
 
-const SearchInput: React.FC = () => {
+interface SearchInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  sizeInput: "small" | "large";
+  clearInputValue: () => void;
+}
 
+const SearchInput: React.FC<SearchInputProps> = ({ sizeInput, clearInputValue, ...rest }) => {
+
+  const [open, setOpen] = React.useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleClick = () => {
+    setOpen(true);
     inputRef.current?.focus();
   };
 
   return (
-    <SearchInputContainer onClick={handleClick}>
+    <SearchInputContainer open={open} onClick={handleClick} sizeInput={sizeInput}>
       <ReactSVG src={SearchIcon} />
-      <SelfCleaningInput inputRef={inputRef} />
+      <SelfCleaningInput
+        inputRef={inputRef}
+        sizeInput={sizeInput}
+        clearInputValue={clearInputValue}
+        {...rest}
+      />
     </SearchInputContainer>
   );
 };

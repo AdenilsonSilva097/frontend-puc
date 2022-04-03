@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 import { windowWidth } from "../../styles/global";
+import { Button } from "../../libraries/mui/components";
 
 const Container = styled.div`
   width: 100%;
@@ -59,6 +60,22 @@ const FormFields = styled.div`
 
 `;
 
+const FormActions = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+`;
+
+const DeleteButton = styled(Button)`
+  color: red !important;
+  border-color: red !important;
+  border-radius: 20px !important;
+  min-width: 150px !important;
+  min-height: 40px !important;
+`;
+
 export {
-  Container, Form, FormFields
+  Container, Form, FormFields, DeleteButton, FormActions
 };
