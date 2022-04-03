@@ -34,10 +34,12 @@ const SearchInputContainer = styled.div<SearchInputStyles>`
   }
 
   @media (max-width: ${windowWidth.mobile.large}) {
-    align-self: center;
-    background-color: white;
+    min-width: 100%;
+    max-width: 100%;
+    /* align-self: center; */
+    /* background-color: white;
     min-width: 95%;
-    max-width: 95%;
+    max-width: 95%; */
   }
 
 `;

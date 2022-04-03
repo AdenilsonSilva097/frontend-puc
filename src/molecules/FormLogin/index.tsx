@@ -18,6 +18,7 @@ const FormLogin: React.FC = () => {
   const navigate = useNavigate();
   const formRef = useRef<FormHandles>(null);
 
+  const [loading, setLoading] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [userLogged, setUserLogged] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -49,7 +50,9 @@ const FormLogin: React.FC = () => {
   const handleSubmit = (formData: SignInFormData) => {
     validations.validateForm(formData, formRef).then((formIsValid) => {
       if (formIsValid) {
+        setLoading(true);
         logIn(formData.email, formData.password);
+        setLoading(false);
       }
     });
   };
@@ -60,6 +63,8 @@ const FormLogin: React.FC = () => {
 
   const responseGoogle = async (response: any) => {
     const { email, familyName, givenName } = response.profileObj;
+
+    setLoading(true);
 
     const userGoogleOauthRegistered = await api.get("/users").then((res) => res.data.find(
       (user: any) => user.email === email
@@ -89,7 +94,14 @@ const FormLogin: React.FC = () => {
         navigate("/office/dashboard");
       });
     }
+
+    setLoading(false);
+
   };
+
+  if (loading) {
+    return <div>Carregando...</div>;
+  }
 
   return (
     <>

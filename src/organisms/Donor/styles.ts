@@ -15,6 +15,7 @@ export const Container = styled.div`
   padding-top: 10px;
 
   > :first-child {
+    /* align-self: flex-end; */
     /* align-self: flex-end;
     margin-right: 10px; */
   }
