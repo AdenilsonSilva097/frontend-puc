@@ -24,7 +24,6 @@ const UserMenu: React.FC<UserMenuProps> = ({ onClose }) => {
 
   const handleLogout = () => {
     navigate("/");
-    console.log("logout");
     localStorage.removeItem("@user");
     onClose();
   };
