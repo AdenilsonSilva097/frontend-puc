@@ -9,9 +9,9 @@ const menus = [
     link: "donor"
   },
   {
-    id: "colaborator",
+    id: "collaborator",
     name: "Colaborador",
-    link: "colaborator"
+    link: "collaborator"
   },
   {
     id: "sector",
