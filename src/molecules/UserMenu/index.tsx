@@ -34,7 +34,6 @@ const UserMenu: React.FC<UserMenuProps> = ({ onClose }) => {
   };
 
   React.useEffect(() => {
-    console.log("to entrando aqui hein");
     const getPermissionGroupName = async () => {
       const { data } = await api.get(`/permission-groups/${loggedUser.permissionGroup}`);
 
