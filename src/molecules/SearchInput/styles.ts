@@ -13,7 +13,7 @@ const SearchInputContainer = styled.div<SearchInputStyles>`
   align-items: center;
   justify-content: flex-start;
   width: 150px;
-  padding: ${(props) => (!props.open ? "7px 13px" : "7px 20px")};
+  padding: 7px 10px 7px 15px;
   border: solid 1px ${(props) => props.theme.colors.label};
   border-radius: 50px;
   transition: all 0.2s ease-in-out;
@@ -36,10 +36,6 @@ const SearchInputContainer = styled.div<SearchInputStyles>`
   @media (max-width: ${windowWidth.mobile.large}) {
     min-width: 100%;
     max-width: 100%;
-    /* align-self: center; */
-    /* background-color: white;
-    min-width: 95%;
-    max-width: 95%; */
   }
 
 `;

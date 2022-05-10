@@ -11,7 +11,6 @@ const Container = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   overflow: hidden;
-  /* position: absolute; */
   padding-top: 15px;
   padding-bottom: 15px;
 
