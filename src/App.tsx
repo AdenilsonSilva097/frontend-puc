@@ -11,6 +11,7 @@ import SignUp from "./pages/SignUp";
 import OfficeMobile from "./pages/OfficeMobile";
 
 import Donor from "./organisms/Donor";
+import Collaborator from "./organisms/Collaborator";
 
 import Dashboard from "./pages/Dashboard";
 import Issue from "./pages/Issue";
@@ -19,10 +20,9 @@ import Permissions from "./pages/Permissions";
 import Registers from "./pages/Registers";
 import Reports from "./pages/Reports";
 
-import isMoblie from "./helpers/IsMobile";
-
 import GlobalStyle from "./styles/global";
 import { themeAtom } from "./styles/themes";
+import { useWindowSize } from "./hooks/useWindowSize";
 
 interface PrivateRouteProps {
   redirectTo: string;
@@ -37,9 +37,15 @@ const PrivateRoute = ({ redirectTo, children }: PrivateRouteProps) => {
 
 function App() {
 
+  const size = useWindowSize();
   const [theme] = useAtom(themeAtom);
+  const [isMobile, setIsMobile] = React.useState(false);
 
   const loggedUser = JSON.parse(localStorage.getItem("@user")!);
+
+  React.useEffect(() => {
+    setIsMobile(size.width < 768);
+  }, [size]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -48,11 +54,11 @@ function App() {
         <Routes>
           <Route path="/" element={!loggedUser ? <Login /> : <Navigate to="/office/dashboard" />} />
           <Route path="register" element={<SignUp />} />
-          <Route path="office" element={<PrivateRoute redirectTo="/">{isMoblie() ? <OfficeMobile /> : <Office />}</PrivateRoute>}>
+          <Route path="office" element={<PrivateRoute redirectTo="/">{isMobile ? <OfficeMobile /> : <Office />}</PrivateRoute>}>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="registers" element={<Registers />}>
               <Route path="donor" element={<Donor />} />
-              <Route path="colaborator" element={<div>Cadastro de colaborador</div>} />
+              <Route path="collaborator" element={<Collaborator />} />
               <Route path="sector" element={<div>Cadastro de setor</div>} />
             </Route>
             <Route path="issue" element={<Issue />}>
