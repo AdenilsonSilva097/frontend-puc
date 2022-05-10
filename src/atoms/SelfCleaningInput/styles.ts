@@ -11,12 +11,12 @@ const SelfCleaningInputContainer = styled.div<SelfCleaningInputContainerStyles>`
   justify-content: flex-start;
 
   > input {
-    flex-grow: 1;
     font-size: ${(props) => (props.sizeInput === "small" ? "14px" : "16px")};
     border: none;
     outline: none;
     background-color: inherit;
     padding-right: 10px;
+    width: 100%;
     
     ::placeholder {
       color: ${(props) => props.theme.colors.placeholder};
@@ -27,8 +27,8 @@ const SelfCleaningInputContainer = styled.div<SelfCleaningInputContainerStyles>`
 const CloseButton = styled.div<SelfCleaningInputContainerStyles>`
   background-color: gray;
   color: white;
-  height: ${(props) => (props.sizeInput === "small" ? "20px" : "22px")};
-  width: ${(props) => (props.sizeInput === "small" ? "20px" : "22px")};
+  min-height: ${(props) => (props.sizeInput === "small" ? "20px" : "22px")};
+  min-width: ${(props) => (props.sizeInput === "small" ? "20px" : "22px")};
   border-radius: 50%;
   text-align: center;
   font-size: 19px;
