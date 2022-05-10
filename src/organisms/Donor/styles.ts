@@ -15,9 +15,9 @@ export const Container = styled.div`
   padding-top: 10px;
 
   > :first-child {
-    /* align-self: flex-end; */
-    /* align-self: flex-end;
-    margin-right: 10px; */
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 100%;
   }
 
   .MuiTableContainer-root {

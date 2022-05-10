@@ -41,21 +41,6 @@ const Donor: React.FC = () => {
 
   const handleSearchInputChange = (value: string) => {
     setFilterDonors(value);
-
-    // if (value.length > 3) {
-    //   setSelectedDonors(donors.filter(
-    //     (donor: any) => return (donor.name.toLowerCase().includes(value.toLowerCase()))
-    //   ));
-    // }
-
-    // const filter = donors.filter(
-    //   (donor: any) => donor.name.toLowerCase().includes(value.toLowerCase())
-    //   || donor.setor.toLowerCase().includes(value.toLowerCase())
-    //   || donor.valor.toLowerCase().includes(value.toLowerCase())
-    //   || donor.melhorData.toLowerCase().includes(value.toLowerCase())
-    // );
-
-    // setFilterDonors(filter);
   };
 
   const handleopenDonorForm = (donor: any) => {
@@ -101,12 +86,14 @@ const Donor: React.FC = () => {
 
   return (
     <Styled.Container>
-      <SearchInput
-        sizeInput="small"
-        value={filterDonors}
-        onChange={(evt) => handleSearchInputChange(evt.currentTarget.value)}
-        clearInputValue={() => setFilterDonors("")}
-      />
+      <div>
+        <SearchInput
+          sizeInput="small"
+          value={filterDonors}
+          onChange={(evt) => handleSearchInputChange(evt.currentTarget.value)}
+          clearInputValue={() => setFilterDonors("")}
+        />
+      </div>
       <TableContainer>
         <Table aria-label="permissions table">
           <TableHead sx={{ position: "sticky", top: "0", backgroundColor: "white" }}>
