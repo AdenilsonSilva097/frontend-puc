@@ -5,7 +5,6 @@ import ptBrLocale from "date-fns/locale/pt-BR";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
-import { get } from "http";
 import SubmitButton from "../../atoms/SubmitButton";
 import NumberFormatCustom from "../../atoms/NumberFormat";
 
@@ -13,8 +12,7 @@ import Yup from "../../libraries/yup";
 import { AdapterDateFns, DatePicker, LocalizationProvider } from "../../libraries/mui/lab";
 import {
   TextField, FormControl, InputLabel, Select, MenuItem,
-  FormHelperText, FormControlLabel, Checkbox, Button,
-  Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
+  FormHelperText, FormControlLabel, Checkbox
 } from "../../libraries/mui/components";
 
 import { handleErrorMessage } from "../../helpers/utils";
@@ -78,7 +76,7 @@ const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave, onDelete })
   const [showConfirmDelete, setShowConfirmDelete] = React.useState(false);
 
   const {
-    control, setValue, handleSubmit, getValues, formState: { errors: formErrors }, reset
+    control, setValue, handleSubmit, formState: { errors: formErrors }, reset
   } = useForm<IFormInputs>({
     resolver: yupResolver(schema),
     reValidateMode: "onChange",
