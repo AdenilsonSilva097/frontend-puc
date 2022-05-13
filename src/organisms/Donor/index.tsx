@@ -78,6 +78,11 @@ const Donor: React.FC = () => {
     );
 
     setSelectedDonors(filter);
+
+    return () => {
+      setSelectedDonors([]);
+    };
+
   }, [filterDonors]);
 
   if (donors.length === 0) {

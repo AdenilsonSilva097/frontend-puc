@@ -4,9 +4,11 @@ import api from "../../services/api";
 
 import Snackbar from "../../atoms/Snackbar";
 
-import isMobile from "../../helpers/IsMobile";
-
 import FormDialog from "../../molecules/FormDialog";
+import SearchInput from "../../molecules/SearchInput";
+import CollaboratorForm from "../../molecules/CollaboratorForm";
+
+import isMobile from "../../helpers/IsMobile";
 
 import { Edit, Add } from "../../libraries/mui/icons";
 import {
@@ -15,8 +17,6 @@ import {
 } from "../../libraries/mui/components";
 
 import * as Styled from "./styles";
-import CollaboratorForm from "../../molecules/CollaboratorForm";
-import SearchInput from "../../molecules/SearchInput";
 
 const Collaborator: React.FC = () => {
 
@@ -83,6 +83,11 @@ const Collaborator: React.FC = () => {
     );
 
     setSelectedCollaborators(filter);
+
+    return () => {
+      setSelectedCollaborators([]);
+    };
+
   }, [filterCollaborators]);
 
   if (collaborators.length === 0) {
