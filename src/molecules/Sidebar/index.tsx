@@ -44,7 +44,7 @@ const Sidebar: React.FC = () => {
 
   const [currentApplications, setCurrentApplications] = React.useState<any[]>([]);
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     (async () => {
       const { data: permissions } = await api.get("/permission-group-items");
       const { data: applicationsData } = await api.get("/applications");
@@ -61,6 +61,11 @@ const Sidebar: React.FC = () => {
 
       setCurrentApplications(applications);
     })();
+
+    return () => {
+      setCurrentApplications([]);
+    };
+
   }, []);
 
   return (
