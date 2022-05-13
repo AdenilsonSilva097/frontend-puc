@@ -3,3 +3,15 @@ GET http://localhost:3001/collaborators
 ###
 
 GET http://localhost:3001/users
+
+###
+
+GET http://localhost:3001/donors
+
+###
+
+GET http://localhost:3001/sectors
+
+###
+
+GET http://localhost:3001/sector-addresses
