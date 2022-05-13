@@ -11,6 +11,7 @@ import SignUp from "./pages/SignUp";
 import OfficeMobile from "./pages/OfficeMobile";
 
 import Donor from "./organisms/Donor";
+import Sector from "./organisms/Sector";
 import Collaborator from "./organisms/Collaborator";
 
 import Dashboard from "./pages/Dashboard";
@@ -59,7 +60,7 @@ function App() {
             <Route path="registers" element={<Registers />}>
               <Route path="donor" element={<Donor />} />
               <Route path="collaborator" element={<Collaborator />} />
-              <Route path="sector" element={<div>Cadastro de setor</div>} />
+              <Route path="sector" element={<Sector />} />
             </Route>
             <Route path="issue" element={<Issue />}>
               <Route path="newIssue" element={<div>Emissão de novos recibos</div>} />
