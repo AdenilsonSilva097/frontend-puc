@@ -16,7 +16,7 @@ const DialogContainerTitle = styled(DialogTitle)`
     align-items: center;
     justify-content: space-between;
     padding: 0px !important;
-    padding-bottom: 30px !important;
+    padding-bottom: 10px !important;
     font-size: 29px !important;
   }
 `;
