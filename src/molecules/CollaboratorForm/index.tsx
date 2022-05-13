@@ -93,8 +93,6 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
     try {
       const newCollaborator = { ...formData };
 
-      console.log(newCollaborator);
-
       if (currentCollaborator) {
         await api.patch(`/collaborators/${currentCollaborator.id}`, newCollaborator);
       } else {
