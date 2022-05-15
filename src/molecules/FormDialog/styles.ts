@@ -4,7 +4,9 @@ import { Dialog, DialogTitle } from "../../libraries/mui/components";
 
 const DialogContainer = styled(Dialog)`
   .MuiDialog-paper {
-    padding: 20px !important;
+    height: 100% !important;
+    margin: 10px !Important;
+    padding: 10px !important;
     border-radius: 10px !important;
   }
 `;
