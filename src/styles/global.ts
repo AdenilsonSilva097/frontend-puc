@@ -44,7 +44,7 @@ export default createGlobalStyle`
     
     .field {
       min-width: 140px !important;
-      min-height: 80px !important;
+      min-height: 65px !important;
     }
 
     /* width */
