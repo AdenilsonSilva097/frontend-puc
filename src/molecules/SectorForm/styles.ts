@@ -9,11 +9,17 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: space-between;
+  overflow: hidden;
+`;
+
+const FormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: flex-start;
   overflow: hidden;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  gap: 15px;
+  gap: 5px;
 
   > :first-child {
     padding-bottom: 15px;
@@ -22,7 +28,6 @@ const Container = styled.div`
 
 const Form = styled.form`
   width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -41,7 +46,7 @@ const FormFields = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 15px;
+  gap: 5px;
   flex-wrap: wrap;
   max-width: 900px;
   
@@ -90,13 +95,16 @@ const FinishButton = styled(Button)`
 
 const AddressFields = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap;
   justify-content: flex-start;
   align-items: center;
   gap: 5px;
+  width: 100%;
+  row-gap: 10px;
 
   > :first-child {
     min-width: 275px;
+    flex-grow: 1;
   }
 `;
 
@@ -131,6 +139,6 @@ const RegisteredAddress = styled.div`
 `;
 
 export {
-  Container, Form, FormFields, DeleteButton, FinishButton,
+  Container, Form, FormFields, DeleteButton, FinishButton, FormContainer,
   FormActions, AddressFields, RegisteredAddresses, RegisteredAddress
 };
