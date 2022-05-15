@@ -4,13 +4,13 @@ import * as _ from "lodash";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
+import { AxiosResponse } from "axios";
 import SubmitButton from "../../atoms/SubmitButton";
 
 import Yup from "../../libraries/yup";
 
 import {
-  TextField, FormControl, InputLabel, Select, MenuItem,
-  FormHelperText, FormControlLabel, Checkbox, Autocomplete, CircularProgress
+  TextField, Autocomplete, CircularProgress
 } from "../../libraries/mui/components";
 
 import { handleErrorMessage } from "../../helpers/utils";
@@ -44,8 +44,11 @@ interface SectorFormProps {
   onDelete: () => void;
 }
 
-const SectorForm: React.FC<SectorFormProps> = ({ onDelete, onSave, currentSector }) => {
+const SectorForm: React.FC<SectorFormProps> = (
+  { onDelete, onSave, currentSector: currentSectorProp }
+) => {
 
+  const [currentSector, setCurrentSector] = React.useState<any>(currentSectorProp);
   const [showConfirmDelete, setShowConfirmDelete] = React.useState(false);
   const [showConfirmDeleteRegisteredAddress,
     setShowConfirmDeleteRegisteredAddress] = React.useState(false);
@@ -59,7 +62,8 @@ const SectorForm: React.FC<SectorFormProps> = ({ onDelete, onSave, currentSector
     && optionsAddressAutocomplete.length === 0;
 
   const {
-    control, setValue, resetField, handleSubmit, formState: { errors: formErrors }, reset
+    control, getValues, setValue, setFocus,
+    resetField, handleSubmit, formState: { errors: formErrors }, reset
   } = useForm<IFormInputs>({
     resolver: yupResolver(schema),
     reValidateMode: "onChange",
@@ -70,43 +74,78 @@ const SectorForm: React.FC<SectorFormProps> = ({ onDelete, onSave, currentSector
     try {
       const newSector = { ...formData };
 
+      let sectorId = null;
+
       if (currentSector) {
-        await api.patch(`/sectors/${currentSector.id}`, newSector.nome);
+        await api.patch(`/sectors/${currentSector.id}`, { nome: newSector.nome });
+
+        sectorId = currentSector.id;
+
       } else {
         const response = await api.post("/sectors", { nome: newSector.nome });
 
-        const sectorAddressResponse = await api.post("/sector-addresses", {
-          setor: response.data.id,
+        setCurrentSector(response.data);
+
+        sectorId = response.data.id;
+      }
+
+      let sectorAddressResponse:AxiosResponse<any, any>;
+
+      if (!currentRegisteredAddress) {
+        sectorAddressResponse = await api.post("/sector-addresses", {
+          setor: sectorId,
           bairro: newSector.endereco.bairro,
           logradouro: newSector.endereco.logradouro,
           numeroEnderecoDe: newSector.numeroEnderecoDe,
           numeroEnderecoAte: newSector.numeroEnderecoAte
         });
+      } else {
+        sectorAddressResponse = await api.patch(`/sector-addresses/${currentRegisteredAddress.id}`, {
+          bairro: newSector.endereco.bairro,
+          logradouro: newSector.endereco.logradouro,
+          numeroEnderecoDe: newSector.numeroEnderecoDe,
+          numeroEnderecoAte: newSector.numeroEnderecoAte
+        });
+      }
 
-        const updatedCurrentSectorAddresses = [...currenSectorAddresses];
+      const updatedCurrentSectorAddresses = [...currenSectorAddresses];
 
+      const updatedCurrentRegisteredAddressIndex = updatedCurrentSectorAddresses.findIndex(
+        (address) => address.id === sectorAddressResponse.data.id
+      );
+
+      const currentRegisteredAddressAlreadyExists = updatedCurrentRegisteredAddressIndex !== -1;
+
+      if (currentRegisteredAddressAlreadyExists) {
+        updatedCurrentSectorAddresses[updatedCurrentRegisteredAddressIndex] = {
+          id: sectorAddressResponse.data.id,
+          bairro: newSector.endereco.bairro,
+          logradouro: newSector.endereco.logradouro,
+          numeroDe: newSector.numeroEnderecoDe,
+          numeroAte: newSector.numeroEnderecoAte
+        };
+      } else {
         updatedCurrentSectorAddresses.push({
           id: sectorAddressResponse.data.id,
           bairro: newSector.endereco.bairro,
           logradouro: newSector.endereco.logradouro,
-          numeroEnderecoDe: newSector.numeroEnderecoDe,
-          numeroEnderecoAte: newSector.numeroEnderecoAte
+          numeroDe: newSector.numeroEnderecoDe,
+          numeroAte: newSector.numeroEnderecoAte
         });
-
-        setCurrentSectorAddresses(updatedCurrentSectorAddresses);
-
-        resetField("endereco");
-        resetField("numeroEnderecoDe");
-        resetField("numeroEnderecoAte");
-
-        const updatedOptionsAddressAutocomplete = optionsAddressAutocomplete.filter(
-          (address) => address.bairro !== newSector.endereco.bairro
-          && address.logradouro !== newSector.endereco.logradouro
-        );
-
-        setOptionsAddressAutocomplete(updatedOptionsAddressAutocomplete);
-
       }
+
+      setCurrentSectorAddresses(updatedCurrentSectorAddresses);
+
+      resetField("endereco");
+      resetField("numeroEnderecoDe");
+      resetField("numeroEnderecoAte");
+
+      const updatedOptionsAddressAutocomplete = optionsAddressAutocomplete.filter(
+        (address) => address.bairro !== newSector.endereco.bairro
+          && address.logradouro !== newSector.endereco.logradouro
+      );
+
+      setOptionsAddressAutocomplete(updatedOptionsAddressAutocomplete);
 
     } catch (error) {
       console.log(error);
@@ -114,7 +153,22 @@ const SectorForm: React.FC<SectorFormProps> = ({ onDelete, onSave, currentSector
     }
   };
 
-  const handleClickFinishButton = () => {
+  const handleClickFinishButton = async () => {
+
+    const sectorName = getValues("nome");
+
+    if (!sectorName) {
+      setFocus("nome");
+
+      return;
+    }
+
+    if (currentSector) {
+      await api.patch(`/sectors/${currentSector.id}`, { nome: sectorName });
+    } else {
+      await api.post("/sectors", { nome: sectorName });
+    }
+
     reset();
     onSave();
   };
@@ -245,135 +299,141 @@ const SectorForm: React.FC<SectorFormProps> = ({ onDelete, onSave, currentSector
 
   return (
     <Styled.Container>
-      <Styled.Form onSubmit={handleSubmit(handleSubmitForm)}>
-        <Styled.FormFields>
-          <Controller
-            name="nome"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                {...field}
-                autoComplete="off"
-                autoFocus
-                label="Nome do setor"
-                variant="outlined"
-                error={!!formErrors.nome}
-                helperText={handleErrorMessage(formErrors.nome)}
-                className="field"
-                sx={{ width: "400px" }}
+      <Styled.FormContainer>
+        <Styled.Form onSubmit={handleSubmit(handleSubmitForm)}>
+          <Styled.FormFields>
+            <Controller
+              name="nome"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  autoComplete="off"
+                  autoFocus
+                  label="Nome do setor"
+                  variant="outlined"
+                  error={!!formErrors.nome}
+                  helperText={handleErrorMessage(formErrors.nome)}
+                  className="field"
+                  sx={{ width: "400px" }}
+                  size="small"
+                />
+              )}
+            />
+            <Styled.AddressFields>
+              <Controller
+                name="endereco"
+                control={control}
+                defaultValue={null}
+                render={({ field }) => (
+                  <Autocomplete
+                    {...field}
+                    onChange={(_ev, item) => field.onChange(item)}
+                    onOpen={() => setOpenAddressAutocomplete(true)}
+                    onClose={() => setOpenAddressAutocomplete(false)}
+                    isOptionEqualToValue={(option, valueOption) => option.id === valueOption.id}
+                    getOptionLabel={(option) => `${option.logradouro} - ${option.bairro}`}
+                    open={openAddressAutocomplete}
+                    options={optionsAddressAutocomplete}
+                    loading={loadingAddressAutocomplete}
+                    loadingText="Carregando..."
+                    noOptionsText="Sem opções"
+                    autoHighlight
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Endereço"
+                        error={!!formErrors.endereco}
+                        variant="outlined"
+                        size="small"
+                        InputProps={{
+                          ...params.InputProps,
+                          endAdornment: (
+                            <>
+                              {loadingAddressAutocomplete && <CircularProgress color="inherit" size={20} />}
+                              {params.InputProps.endAdornment}
+                            </>
+                          )
+                        }}
+                      />
+                    )}
+                  />
+                )}
               />
-            )}
-          />
-          <Styled.AddressFields>
-            <Controller
-              name="endereco"
-              control={control}
-              defaultValue={null}
-              render={({ field }) => (
-                <Autocomplete
-                  {...field}
-                  onChange={(_ev, item) => field.onChange(item)}
-                  onOpen={() => setOpenAddressAutocomplete(true)}
-                  onClose={() => setOpenAddressAutocomplete(false)}
-                  isOptionEqualToValue={(option, valueOption) => option.id === valueOption.id}
-                  getOptionLabel={(option) => `${option.logradouro} - ${option.bairro}`}
-                  open={openAddressAutocomplete}
-                  options={optionsAddressAutocomplete}
-                  loading={loadingAddressAutocomplete}
-                  loadingText="Carregando..."
-                  noOptionsText="Sem opções"
-                  autoHighlight
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Endereço"
-                      error={!!formErrors.endereco}
-                      variant="outlined"
-                      InputProps={{
-                        ...params.InputProps,
-                        endAdornment: (
-                          <>
-                            {loadingAddressAutocomplete && <CircularProgress color="inherit" size={20} />}
-                            {params.InputProps.endAdornment}
-                          </>
-                        )
-                      }}
-                    />
-                  )}
-                />
-              )}
-            />
-            <Controller
-              name="numeroEnderecoDe"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  autoComplete="off"
-                  label="Número de"
-                  type="number"
-                  variant="outlined"
-                  error={!!formErrors.numeroEnderecoDe}
-                  sx={{ width: "120px" }}
-                  InputProps={{
-                    inputProps: {
-                      min: 0
-                    }
-                  }}
-                />
-              )}
-            />
-            <div> - </div>
-            <Controller
-              name="numeroEnderecoAte"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  autoComplete="off"
-                  label="Número até"
-                  type="number"
-                  variant="outlined"
-                  error={!!formErrors.numeroEnderecoAte}
-                  sx={{ width: "120px" }}
-                  InputProps={{
-                    inputProps: {
-                      min: 0
-                    }
-                  }}
-                />
-              )}
-            />
-          </Styled.AddressFields>
-        </Styled.FormFields>
-        <Styled.FormActions>
-          {!showConfirmDeleteRegisteredAddress && currentRegisteredAddress
-              && (
-              <Styled.DeleteButton variant="outlined" onClick={() => setShowConfirmDeleteRegisteredAddress(true)}>
-                Excluir
+              <Controller
+                name="numeroEnderecoDe"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    autoComplete="off"
+                    label="Número de"
+                    type="number"
+                    variant="outlined"
+                    error={!!formErrors.numeroEnderecoDe}
+                    sx={{ width: "120px" }}
+                    size="small"
+                    InputProps={{
+                      inputProps: {
+                        min: 0
+                      }
+                    }}
+                  />
+                )}
+              />
+              <div> - </div>
+              <Controller
+                name="numeroEnderecoAte"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    autoComplete="off"
+                    label="Número até"
+                    type="number"
+                    variant="outlined"
+                    error={!!formErrors.numeroEnderecoAte}
+                    sx={{ width: "120px" }}
+                    size="small"
+                    InputProps={{
+                      inputProps: {
+                        min: 0
+                      }
+                    }}
+                  />
+                )}
+              />
+            </Styled.AddressFields>
+          </Styled.FormFields>
+          <Styled.FormActions>
+            {!showConfirmDeleteRegisteredAddress && currentRegisteredAddress
+                && (
+                <Styled.DeleteButton variant="outlined" onClick={() => setShowConfirmDeleteRegisteredAddress(true)}>
+                  Excluir
+                </Styled.DeleteButton>
+                )}
+            {showConfirmDeleteRegisteredAddress && (
+              <Styled.DeleteButton variant="outlined" onClick={handleClickDeleteRegisteredAddressButton}>
+                Efetivar exclusão
               </Styled.DeleteButton>
-              )}
-          {showConfirmDeleteRegisteredAddress && (
-            <Styled.DeleteButton variant="outlined" onClick={handleClickDeleteRegisteredAddressButton}>
-              Efetivar exclusão
-            </Styled.DeleteButton>
-          )}
-          <SubmitButton text="Adicionar" />
-        </Styled.FormActions>
-      </Styled.Form>
-      <Styled.RegisteredAddresses>
-        {currenSectorAddresses.map((address: any) => (
-          <Styled.RegisteredAddress
-            key={address.logradouro}
-            onClick={() => handleRegisteredAddressClick(address)}
-          >
-            {`${address.logradouro} - ${address.bairro} | Nº ${address.numeroDe} até Nº ${address.numeroAte}`}
-          </Styled.RegisteredAddress>
-        ))}
-      </Styled.RegisteredAddresses>
+            )}
+            <SubmitButton text="Adicionar" />
+          </Styled.FormActions>
+        </Styled.Form>
+        <Styled.RegisteredAddresses>
+          {currenSectorAddresses.map((address: any) => (
+            <Styled.RegisteredAddress
+              key={address.logradouro}
+              onClick={() => handleRegisteredAddressClick(address)}
+            >
+              {`${address.logradouro} - ${address.bairro} | Nº ${address.numeroDe} até Nº ${address.numeroAte}`}
+            </Styled.RegisteredAddress>
+          ))}
+        </Styled.RegisteredAddresses>
+      </Styled.FormContainer>
       <Styled.FormActions>
         <Styled.FinishButton onClick={handleClickFinishButton}>
           Finalizar
