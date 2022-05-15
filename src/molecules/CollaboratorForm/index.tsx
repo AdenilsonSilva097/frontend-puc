@@ -72,9 +72,10 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
 
   const [showConfirmDelete, setShowConfirmDelete] = React.useState(false);
   const [permissions, setPermissions] = React.useState<any[]>([]);
+  const [sectors, setSectors] = React.useState<any[]>([]);
 
   const {
-    control, setValue, handleSubmit, formState: { errors: formErrors }, reset
+    control, setValue, getValues, handleSubmit, formState: { errors: formErrors }, reset
   } = useForm<IFormInputs>({
     resolver: yupResolver(schema),
     reValidateMode: "onChange",
@@ -83,6 +84,10 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
 
   const handlePositionChange = (newValue: string) => {
     setValue("cargo", newValue);
+  };
+
+  const handleSectorChange = (newValue: string) => {
+    setValue("setor", newValue);
   };
 
   const handlePermissionChange = (newValue: string) => {
@@ -122,8 +127,10 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
   React.useEffect(() => {
     (async () => {
       const { data: permissionsData } = await api.get("/permission-groups");
+      const { data: sectorsData } = await api.get("/sectors");
 
       setPermissions(permissionsData);
+      setSectors(sectorsData);
     })();
   }, []);
 
@@ -160,7 +167,7 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
             control={control}
             defaultValue=""
             render={({ field }) => (
-              <FormControl error={!!formErrors.cargo} className="field" sx={{ width: "200px" }}>
+              <FormControl size="small" error={!!formErrors.cargo} className="field" sx={{ width: "200px" }}>
                 <InputLabel id="permission-select">Cargo</InputLabel>
                 <Select
                   {...field}
@@ -168,6 +175,7 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
                   label="Cargo"
                   error={!!formErrors.cargo}
                   onChange={(e) => handlePositionChange(e.target.value)}
+                  size="small"
                 >
                   {permissions.map((permission) => (
                     <MenuItem key={permission.id} value={permission.id}>
@@ -189,7 +197,7 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
             control={control}
             defaultValue=""
             render={({ field }) => (
-              <FormControl error={!!formErrors.permissionGroup} className="field" sx={{ width: "200px" }}>
+              <FormControl size="small" error={!!formErrors.permissionGroup} className="field" sx={{ width: "200px" }}>
                 <InputLabel id="permission-select">Permissão</InputLabel>
                 <Select
                   {...field}
@@ -197,6 +205,7 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
                   label="Permissão"
                   error={!!formErrors.permissionGroup}
                   onChange={(e) => handlePermissionChange(e.target.value)}
+                  size="small"
                 >
                   {permissions.map((permission) => (
                     <MenuItem key={permission.id} value={permission.id}>
@@ -227,6 +236,7 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
                 helperText={handleErrorMessage(formErrors.nome)}
                 className="field"
                 sx={{ width: "400px" }}
+                size="small"
               />
             )}
           />
@@ -246,6 +256,7 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
                 inputProps={{ maxLength: 11 }}
                 className="field"
                 sx={{ width: "50px" }}
+                size="small"
               />
             )}
           />
@@ -263,6 +274,7 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
                 helperText={handleErrorMessage(formErrors.cep)}
                 className="field"
                 sx={{ width: "50px" }}
+                size="small"
               />
             )}
           />
@@ -280,6 +292,7 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
                 helperText={handleErrorMessage(formErrors.endereco)}
                 className="field"
                 sx={{ width: "500px" }}
+                size="small"
               />
             )}
           />
@@ -297,6 +310,7 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
                 helperText={handleErrorMessage(formErrors.numeroEndereco)}
                 className="field"
                 sx={{ width: "50px" }}
+                size="small"
               />
             )}
           />
@@ -314,6 +328,7 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
                 helperText={handleErrorMessage(formErrors.cidade)}
                 className="field"
                 sx={{ width: "350px" }}
+                size="small"
               />
             )}
           />
@@ -332,6 +347,7 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
                 inputProps={{ maxLength: 2 }}
                 className="field"
                 sx={{ width: "50px" }}
+                size="small"
               />
             )}
           />
@@ -348,6 +364,7 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
                 error={!!formErrors.bairro}
                 helperText={handleErrorMessage(formErrors.bairro)}
                 className="field"
+                size="small"
               />
             )}
           />
@@ -356,15 +373,29 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
             control={control}
             defaultValue=""
             render={({ field }) => (
-              <TextField
-                {...field}
-                autoComplete="off"
-                label="Setor"
-                variant="outlined"
-                error={!!formErrors.setor}
-                helperText={handleErrorMessage(formErrors.setor)}
-                className="field"
-              />
+              <FormControl size="small" error={!!formErrors.setor} className="field" sx={{ width: "200px" }}>
+                <InputLabel id="sector-select">Setor</InputLabel>
+                <Select
+                  {...field}
+                  labelId="sector-select"
+                  label="Setor"
+                  error={!!formErrors.setor}
+                  onChange={(e) => handleSectorChange(e.target.value)}
+                  size="small"
+                >
+                  {sectors.map((sector) => (
+                    <MenuItem key={sector.id} value={sector.id}>
+                      {sector.nome}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {!!formErrors.setor
+                    && (
+                    <FormHelperText>
+                      {handleErrorMessage(formErrors.setor)}
+                    </FormHelperText>
+                    )}
+              </FormControl>
             )}
           />
           <Controller
@@ -380,6 +411,7 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
                 error={!!formErrors.complemento}
                 helperText={handleErrorMessage(formErrors.complemento)}
                 className="field"
+                size="small"
               />
             )}
           />
@@ -400,6 +432,7 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
                       helperText={handleErrorMessage(formErrors.dataNascimento)}
                       className="field"
                       sx={{ width: "200px" }}
+                      size="small"
                     />
                   )}
                 />
@@ -419,6 +452,7 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
                 error={!!formErrors.cpf}
                 helperText={handleErrorMessage(formErrors.cpf)}
                 className="field"
+                size="small"
               />
             )}
           />
@@ -436,6 +470,7 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
                 helperText={handleErrorMessage(formErrors.rg)}
                 className="field"
                 sx={{ width: "150px" }}
+                size="small"
               />
             )}
           />
@@ -456,6 +491,7 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
                       helperText={handleErrorMessage(formErrors.inicioVinculo)}
                       className="field"
                       sx={{ width: "200px" }}
+                      size="small"
                     />
                   )}
                 />
@@ -475,6 +511,7 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
                 error={!!formErrors.observacoes}
                 helperText={handleErrorMessage(formErrors.observacoes)}
                 className="field"
+                size="small"
               />
             )}
           />
