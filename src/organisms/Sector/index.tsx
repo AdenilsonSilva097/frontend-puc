@@ -1,5 +1,6 @@
 import React from "react";
 
+import _ from "lodash";
 import api from "../../services/api";
 
 import Snackbar from "../../atoms/Snackbar";
@@ -32,10 +33,19 @@ const Sector: React.FC = () => {
     try {
       const { data: sectorsData } = await api.get("/sectors");
 
-      setSectors(sectorsData);
-      setSelectedSectors(sectorsData);
-    } catch (error) {
+      const sectorsWithAddresses = await Promise.all(sectorsData.map(async (sector: any) => {
+        const { data: addresses } = await api.get(`/sector-addresses/sector/${sector.id}`);
 
+        return {
+          ...sector,
+          addresses: [...addresses]
+        };
+      }));
+
+      setSectors(sectorsWithAddresses);
+      setSelectedSectors(sectorsWithAddresses);
+
+    } catch (error) {
       console.log(error);
     }
   };
@@ -86,10 +96,6 @@ const Sector: React.FC = () => {
 
   }, [filterSectors]);
 
-  if (sectors.length === 0) {
-    return <div>Carregando dados...</div>;
-  }
-
   return (
     <Styled.Container>
       <div>
@@ -105,8 +111,7 @@ const Sector: React.FC = () => {
           <TableHead sx={{ position: "sticky", top: "0", backgroundColor: "white" }}>
             <TableRow>
               <TableCell sx={{ fontWeight: "bold" }} align="left">Nome</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }} align="left">Qtde ruas</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }} align="left">Qtde bairros</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }} align="left">Qtde endereços</TableCell>
               <TableCell sx={{ fontWeight: "bold" }} align="left" />
             </TableRow>
           </TableHead>
@@ -114,13 +119,14 @@ const Sector: React.FC = () => {
             {selectedSectors.length === 0 && (
               <TableRow>
                 <TableCell align="left">Nenhum setor encontrado</TableCell>
+                <TableCell align="left" />
+                <TableCell align="left" />
               </TableRow>
             )}
             {selectedSectors.map((sector, index) => (
               <TableRow key={sector.id}>
                 <TableCell align="left">{sector.nome}</TableCell>
-                <TableCell align="left">{sector.cpf}</TableCell>
-                <TableCell align="left">{sector.observacoes}</TableCell>
+                <TableCell align="left">{sector.addresses.length}</TableCell>
                 <TableCell align="right">
                   <IconButton onClick={() => handleopenSectorForm(sector)}>
                     <Edit fontSize="small" />
