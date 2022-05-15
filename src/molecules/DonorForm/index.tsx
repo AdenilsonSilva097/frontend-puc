@@ -158,6 +158,7 @@ const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave, onDelete })
                 variant="outlined"
                 error={!!formErrors.valor}
                 helperText={handleErrorMessage(formErrors.valor)}
+                size="small"
                 InputProps={{
                   inputComponent: NumberFormatCustom as any
                 }}
@@ -171,13 +172,14 @@ const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave, onDelete })
             control={control}
             defaultValue=""
             render={({ field }) => (
-              <FormControl error={!!formErrors.frequencia} className="field" sx={{ width: "100px" }}>
+              <FormControl size="small" error={!!formErrors.frequencia} className="field" sx={{ width: "100px" }}>
                 <InputLabel id="frequency-select">Frequência</InputLabel>
                 <Select
                   {...field}
                   labelId="frequency-select"
                   label="Frequência"
                   error={!!formErrors.frequencia}
+                  size="small"
                   onChange={(e) => handleFrequencyChange(e.target.value)}
                 >
                   <MenuItem value="SEMANAL">Semanal</MenuItem>
@@ -205,6 +207,7 @@ const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave, onDelete })
                 className="field"
                 type="number"
                 sx={{ width: "100px" }}
+                size="small"
               />
             )}
           />
@@ -222,6 +225,7 @@ const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave, onDelete })
                 helperText={handleErrorMessage(formErrors.nome)}
                 className="field"
                 sx={{ width: "400px" }}
+                size="small"
               />
             )}
           />
@@ -241,6 +245,7 @@ const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave, onDelete })
                 inputProps={{ maxLength: 11 }}
                 className="field"
                 sx={{ width: "50px" }}
+                size="small"
               />
             )}
           />
@@ -258,6 +263,7 @@ const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave, onDelete })
                 helperText={handleErrorMessage(formErrors.cep)}
                 className="field"
                 sx={{ width: "50px" }}
+                size="small"
               />
             )}
           />
@@ -275,6 +281,7 @@ const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave, onDelete })
                 helperText={handleErrorMessage(formErrors.endereco)}
                 className="field"
                 sx={{ width: "500px" }}
+                size="small"
               />
             )}
           />
@@ -292,6 +299,7 @@ const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave, onDelete })
                 helperText={handleErrorMessage(formErrors.numeroEndereco)}
                 className="field"
                 sx={{ width: "50px" }}
+                size="small"
               />
             )}
           />
@@ -309,6 +317,7 @@ const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave, onDelete })
                 helperText={handleErrorMessage(formErrors.cidade)}
                 className="field"
                 sx={{ width: "350px" }}
+                size="small"
               />
             )}
           />
@@ -327,6 +336,7 @@ const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave, onDelete })
                 inputProps={{ maxLength: 2 }}
                 className="field"
                 sx={{ width: "50px" }}
+                size="small"
               />
             )}
           />
@@ -343,6 +353,7 @@ const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave, onDelete })
                 error={!!formErrors.bairro}
                 helperText={handleErrorMessage(formErrors.bairro)}
                 className="field"
+                size="small"
               />
             )}
           />
@@ -359,6 +370,7 @@ const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave, onDelete })
                 error={!!formErrors.setor}
                 helperText={handleErrorMessage(formErrors.setor)}
                 className="field"
+                size="small"
               />
             )}
           />
@@ -375,6 +387,7 @@ const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave, onDelete })
                 error={!!formErrors.complemento}
                 helperText={handleErrorMessage(formErrors.complemento)}
                 className="field"
+                size="small"
               />
             )}
           />
@@ -395,6 +408,7 @@ const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave, onDelete })
                       helperText={handleErrorMessage(formErrors.dataNascimento)}
                       className="field"
                       sx={{ width: "200px" }}
+                      size="small"
                     />
                   )}
                 />
@@ -414,6 +428,7 @@ const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave, onDelete })
                 error={!!formErrors.cpf}
                 helperText={handleErrorMessage(formErrors.cpf)}
                 className="field"
+                size="small"
               />
             )}
           />
@@ -431,6 +446,7 @@ const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave, onDelete })
                 helperText={handleErrorMessage(formErrors.rg)}
                 className="field"
                 sx={{ width: "150px" }}
+                size="small"
               />
             )}
           />
@@ -451,6 +467,7 @@ const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave, onDelete })
                       helperText={handleErrorMessage(formErrors.inicioDoacao)}
                       className="field"
                       sx={{ width: "200px" }}
+                      size="small"
                     />
                   )}
                 />
@@ -470,23 +487,24 @@ const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave, onDelete })
                 error={!!formErrors.observacoes}
                 helperText={handleErrorMessage(formErrors.observacoes)}
                 className="field"
-              />
-            )}
-          />
-          <Controller
-            name="inativo"
-            control={control}
-            defaultValue={false}
-            render={({ field }) => (
-              <FormControlLabel
-                {...field}
-                control={<Checkbox value={field.value} />}
-                label="Inativar doador"
-                sx={{ paddingBottom: "10px" }}
+                size="small"
               />
             )}
           />
         </Styled.FormFields>
+        <Controller
+          name="inativo"
+          control={control}
+          defaultValue={false}
+          render={({ field }) => (
+            <FormControlLabel
+              {...field}
+              control={<Checkbox size="small" value={field.value} />}
+              label="Inativar doador"
+              sx={{ paddingBottom: "10px" }}
+            />
+          )}
+        />
         <Styled.FormActions>
           <SubmitButton text="Confirmar" />
           {!showConfirmDelete && currentDonor
