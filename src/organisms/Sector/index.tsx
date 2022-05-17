@@ -9,8 +9,6 @@ import FormDialog from "../../molecules/FormDialog";
 import SearchInput from "../../molecules/SearchInput";
 import SectorForm from "../../molecules/SectorForm";
 
-import isMobile from "../../helpers/IsMobile";
-
 import { Edit, Add } from "../../libraries/mui/icons";
 import {
   Table, TableHead, TableBody, TableRow, TableCell,
