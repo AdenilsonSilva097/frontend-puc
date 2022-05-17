@@ -42,9 +42,7 @@ function App() {
   const [theme] = useAtom(themeAtom);
   const [isMobile, setIsMobile] = React.useState(false);
 
-  const userLocalStorage = localStorage.getItem("@user") || "";
-
-  const loggedUser = JSON.parse(userLocalStorage);
+  const loggedUser = JSON.parse(localStorage.getItem("@user")!);
 
   React.useEffect(() => {
     setIsMobile(size.width < 768);
