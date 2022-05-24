@@ -56,6 +56,7 @@ const FormFields = styled.div`
       width: 100% !important;
     }
   }
+
 `;
 
 const FormActions = styled.div`
@@ -74,6 +75,24 @@ const DeleteButton = styled(Button)`
   min-height: 40px !important;
 `;
 
+const Receipts = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 10px;
+  overflow: auto;
+  padding-bottom: 5px;
+  padding-right: 5px;
+
+  @media ( max-width: ${windowWidth.mobile.large} ) {
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+  }
+
+`;
+
 export {
-  Container, Form, FormFields, DeleteButton, FormActions
+  Container, Form, FormFields, DeleteButton, FormActions, Receipts
 };

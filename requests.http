@@ -10,7 +10,7 @@ GET http://localhost:3001/donors
 
 ###
 
-GET http://localhost:3001/sectors
+GET http://localhost:3001/receipts
 
 ###
 

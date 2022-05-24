@@ -13,6 +13,7 @@ import OfficeMobile from "./pages/OfficeMobile";
 import Donor from "./organisms/Donor";
 import Sector from "./organisms/Sector";
 import Collaborator from "./organisms/Collaborator";
+import GenerateReceipts from "./organisms/GenerateReceipts";
 
 import Dashboard from "./pages/Dashboard";
 import Issue from "./pages/Issue";
@@ -63,7 +64,7 @@ function App() {
               <Route path="sector" element={<Sector />} />
             </Route>
             <Route path="issue" element={<Issue />}>
-              <Route path="newIssue" element={<div>Emissão de novos recibos</div>} />
+              <Route path="newIssue" element={<GenerateReceipts />} />
               <Route path="issued" element={<div>Visualizar recibos emitidos</div>} />
             </Route>
             <Route path="reports" element={<Reports />} />
