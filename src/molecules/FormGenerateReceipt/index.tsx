@@ -73,7 +73,7 @@ const FormGenerateReceipt: React.FC<IProps> = ({
 
       const newReceipt = {
         idDoador,
-        valor,
+        valor: formData.valor,
         dataEmissao: formData.dataEmissao,
         idMensageiro: collaboratorId ? collaboratorId.id : "",
         status: "EMITIDA"

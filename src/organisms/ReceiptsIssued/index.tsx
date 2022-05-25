@@ -94,10 +94,6 @@ const ReceiptsIssued: React.FC = () => {
 
   }, [filterReceipts]);
 
-  if (receipts.length === 0) {
-    return <div>Carregando dados...</div>;
-  }
-
   return (
     <Styled.Container>
       <div>
