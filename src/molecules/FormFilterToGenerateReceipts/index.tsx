@@ -311,7 +311,7 @@ const FormFilterToGenerateReceipts: React.FC = () => {
         onClose={() => setOpenReceipts(false)}
       >
         <Styled.Receipts>
-          {filteredDonors.map((donor, index) => (
+          {filteredDonors.length > 0 ? filteredDonors.map((donor, index) => (
             <FormGenerateReceipt
               key={donor.id}
               bairro={donor.bairro}
@@ -323,7 +323,7 @@ const FormFilterToGenerateReceipts: React.FC = () => {
               idDoador={donor.id}
               onSave={() => handleSaveReceipt(donor.id)}
             />
-          ))}
+          )) : (<div>Sem recibos...</div>)}
         </Styled.Receipts>
       </FormDialog>
     </Styled.Container>
