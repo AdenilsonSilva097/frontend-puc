@@ -8,6 +8,11 @@ const NavbarContainer = styled.div`
   height: 70px;
   padding-left: 35px;
   padding-right: 25px;
+
+  @media print {
+    display: none;
+  }
+
 `;
 
 export { NavbarContainer };

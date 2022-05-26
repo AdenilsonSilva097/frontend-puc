@@ -5,6 +5,13 @@ const OfficeContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
+
+  @media print {
+    > :first-child {
+      display: none;
+    }
+  }
+
 `;
 
 const OfficeContentArea = styled.div`

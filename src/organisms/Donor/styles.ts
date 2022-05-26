@@ -28,6 +28,14 @@ export const Container = styled.div`
     .MuiTableCell-root {
       padding: 7.5px;
     }
+
+    tr {
+      > :last-child {
+        @media print {
+          display: none;
+        }
+      }
+    }
   }
 
   > * {
@@ -70,6 +78,32 @@ export const FabContainer = styled(Fab)`
     right: 10px !important;
     bottom: 10px !important;
     background-color: ${(props) => props.theme.colors.secondary} !important;
+  }
+
+  @media print {
+    display: none !important;
+  }
+
+`;
+
+export const FabPrint = styled(Fab)`
+  position: fixed !important;
+  right: 110px !important;
+  bottom: 20px !important;
+  background-color: ${(props) => props.theme.colors.primary} !important;
+
+  svg {
+    fill: white;
+  }
+
+  @media (max-width: ${windowWidth.mobile.large}) {
+    right: 100px !important;
+    bottom: 10px !important;
+    background-color: ${(props) => props.theme.colors.secondary} !important;
+  }
+
+  @media print {
+    display: none !important;
   }
 
 `;

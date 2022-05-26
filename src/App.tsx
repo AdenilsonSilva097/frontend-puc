@@ -26,6 +26,7 @@ import GlobalStyle from "./styles/global";
 import { themeAtom } from "./styles/themes";
 import { useWindowSize } from "./hooks/useWindowSize";
 import ReceiptsIssued from "./organisms/ReceiptsIssued";
+import MessengerReceipts from "./organisms/MessengerReceipts";
 
 interface PrivateRouteProps {
   redirectTo: string;
@@ -69,7 +70,11 @@ function App() {
               <Route path="issued" element={<ReceiptsIssued />} />
             </Route>
             <Route path="reports" element={<Reports />} />
-            <Route path="messenger" element={<Messenger />} />
+            <Route path="messenger" element={<Messenger />}>
+              <Route path="messengerReceipts" element={<MessengerReceipts />} />
+              <Route path="messengerReport" element={<Permissions />} />
+              <Route path="messengerIntinerary" element={<Permissions />} />
+            </Route>
             <Route path="permissions" element={<Permissions />} />
           </Route>
         </Routes>

@@ -16,6 +16,10 @@ const NavbarMobileContainer = styled.div`
     }
   }
 
+  @media print {
+    display: none;
+  }
+
 `;
 
 export { NavbarMobileContainer };

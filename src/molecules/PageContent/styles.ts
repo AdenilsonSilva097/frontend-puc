@@ -41,7 +41,7 @@ const PageContentMenus = styled.div`
     outline: none;
     text-decoration: none;
     color: black;
-
+    
     &:hover,
     &:focus {
       border: none;
@@ -65,9 +65,14 @@ const PageContentMenu = styled(NavLink)`
   }
 
   &.active {
+    
     > :last-child {
       transition: width 0.6s;
       width: 100%;
+    }
+
+    @media print {
+      color: ${({ theme }) => theme.colors.primary};
     }
   }
 `;

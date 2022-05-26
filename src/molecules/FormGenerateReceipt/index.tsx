@@ -58,12 +58,14 @@ const FormGenerateReceipt: React.FC<IProps> = ({
     try {
       const response = await api.get("/sector-addresses");
 
-      const sectorId = response.data.find(
+      const currentSectorAddress = response.data.find(
         (sectorAddress: any) => sectorAddress.bairro === bairro
       && sectorAddress.logradouro === endereco
       && Number(numeroEndereco) >= Number(sectorAddress.numeroEnderecoDe)
       && Number(numeroEndereco) <= Number(sectorAddress.numeroEnderecoAte)
-      ).setor;
+      );
+
+      const sectorId = currentSectorAddress ? currentSectorAddress.setor : "";
 
       const collaborators = await api.get("/collaborators");
 
@@ -92,7 +94,6 @@ const FormGenerateReceipt: React.FC<IProps> = ({
   return (
     <Styled.Container>
       <Styled.Infos>
-        {/* <Styled.Identification>{identification}</Styled.Identification> */}
         <Styled.Info>
           <Styled.Title>Doador</Styled.Title>
           <Styled.Description>{doador}</Styled.Description>

@@ -38,6 +38,10 @@ const SearchInputContainer = styled.div<SearchInputStyles>`
     max-width: 100%;
   }
 
+  @media print {
+    display: none;
+  }
+
 `;
 
 export { SearchInputContainer };
