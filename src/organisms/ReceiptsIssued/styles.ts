@@ -3,6 +3,10 @@ import { windowWidth } from "../../styles/global";
 
 import { Dialog, Fab } from "../../libraries/mui/components";
 
+interface IStatusProps {
+  status: string;
+}
+
 export const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -73,8 +77,30 @@ export const FabContainer = styled(Fab)`
   }
 `;
 
-export const Status = styled.span`
+export const Status = styled.span<IStatusProps>`
   color: white;
+
+  ${(props) => {
+    switch (props.status) {
+      case "EMITIDA":
+        return `
+          background-color: ${props.theme.colors.primary} !important;
+        `;
+      case "RECEBIDA":
+        return `
+          background-color: ${props.theme.colors.secondary} !important;
+        `;
+      case "REMARCAR":
+        return `
+          background-color: #CACACA !important;
+        `;
+      default:
+        return `
+          background-color: ${props.theme.colors.background} !important;
+        `;
+    }
+  }}
+
   background-color: ${(props) => props.theme.colors.secondary};
   border-radius: 5px;
   padding: 5px; 

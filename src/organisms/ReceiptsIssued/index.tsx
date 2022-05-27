@@ -136,12 +136,12 @@ const ReceiptsIssued: React.FC = () => {
                   {!isMobile() && (
                   <TableCell align="left">{receipt.mensageiro}</TableCell>)}
                   <TableCell align="left">
-                    <Styled.Status>{receipt.status}</Styled.Status>
+                    <Styled.Status status={receipt.status}>{receipt.status}</Styled.Status>
                   </TableCell>
                   <TableCell align="left">{data}</TableCell>
                   <TableCell align="left">{formattedValue}</TableCell>
                   <TableCell align="right">
-                    <IconButton onClick={() => handleClickDeleteReceipt(receipt.id)}>
+                    <IconButton onClick={() => handleClickDeleteReceipt(receipt.id)} disabled={receipt.status === "RECEBIDA"}>
                       <Delete fontSize="small" />
                     </IconButton>
                   </TableCell>
