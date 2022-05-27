@@ -56,7 +56,6 @@ const Description = styled.div`
   @media (max-width: ${windowWidth.mobile.large}) {
     font-size: 16px;
   }
-
 `;
 
 const Address = styled.div`

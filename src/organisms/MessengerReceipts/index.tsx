@@ -1,4 +1,7 @@
 import React from "react";
+
+import Snackbar from "../../atoms/Snackbar";
+
 import MessengerReceipt from "../../molecules/MessengerReceipt";
 
 import api from "../../services/api";
@@ -6,11 +9,17 @@ import api from "../../services/api";
 import { Check, Close } from "../../libraries/mui/icons";
 
 import * as Styled from "./styles";
+import FormDialog from "../../molecules/FormDialog";
+import DonorForm from "../../molecules/DonorForm";
 
 const MessengerReceipts: React.FC = () => {
 
-  const [receipts, setReceipts] = React.useState<any[]>([]);
+  const [receipts, setReceipts] = React.useState<any[] | null>(null);
   const [currentIndex, setCurrentIndex] = React.useState<number>(0);
+  const [openDonorForm, setOpenDonorForm] = React.useState<boolean>(false);
+  const [currentDonor, setCurrentDonor] = React.useState<any>({});
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState("");
 
   const loggedUser = JSON.parse(localStorage.getItem("@user")!);
 
@@ -25,11 +34,11 @@ const MessengerReceipts: React.FC = () => {
       );
 
       const filteredReceipts = receiptsData.filter(
-        (receipt: any) => receipt.idMensageiro === collaboratorMessenger.id
+        (receipt: any) => receipt.idMensageiro === collaboratorMessenger.id && receipt.status === "EMITIDA"
       );
 
       const receiptsWithDonorAndMessenger = filteredReceipts.map((receipt: any) => {
-        const { idDoador, idMensageiro } = receipt;
+        const { idDoador } = receipt;
 
         const donorFound = donorData.find((donor: any) => donor.id === idDoador);
 
@@ -54,25 +63,76 @@ const MessengerReceipts: React.FC = () => {
     };
   }, []);
 
-  if (receipts.length === 0) {
-    return <div>Carregando...</div>;
+  if (!receipts) {
+    return <div style={{ padding: "10px" }}>Carregando...</div>;
   }
 
-  const handleCheckClick = () => {
-    const updatedReceipts = receipts.filter((_receipt, index) => index !== currentIndex);
+  if (receipts.length === 0) {
+    return <div style={{ padding: "10px" }}>Nenhuma guia para receber</div>;
+  }
 
-    console.log(updatedReceipts);
-    setReceipts(updatedReceipts);
+  const handleCloseClick = async () => {
+    try {
+      const response = await api.patch(`/receipts/${receipts[currentIndex].id}`, { status: "REMARCAR" });
 
-    if (currentIndex > 0) setCurrentIndex((value) => value - 1);
+      if (response.status === 200) {
+        setSnackbarOpen(true);
+        setSnackbarMessage("Guia de doação atualizada com sucesso!");
+      }
+
+      const updatedReceipts = receipts.filter((_receipt, index) => index !== currentIndex);
+
+      if (currentIndex > 0) setCurrentIndex((value) => value - 1);
+
+      setReceipts(updatedReceipts);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleCheckClick = async () => {
+
+    try {
+      const responsePatch = await api.patch(`/receipts/${receipts[currentIndex].id}`, { status: "RECEBIDA" });
+
+      if (responsePatch.status === 200) {
+        const responsePost = await api.post("/donation-protocols", {
+          idGuiaDoacao: receipts[currentIndex].id,
+          valor: receipts[currentIndex].valor
+        });
+
+        if (responsePost.status === 201) {
+          setSnackbarOpen(true);
+          setSnackbarMessage("Guia de doação recebida com sucesso!");
+        }
+      }
+
+      const updatedReceipts = receipts.filter((_receipt, index) => index !== currentIndex);
+
+      if (currentIndex > 0) setCurrentIndex((value) => value - 1);
+
+      setReceipts(updatedReceipts);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleClickDonorButton = () => {
+    setOpenDonorForm(true);
+    setCurrentDonor(receipts[currentIndex].doador);
+  };
+
+  const onSaveDonorForm = () => {
+    setOpenDonorForm(false);
+    getDatabaseReceipts();
   };
 
   return (
     <Styled.Container>
       <Styled.Receipts>
-        {/* {receipts.map((receipt: any) => ( */}
         <MessengerReceipt
-            // key={receipt.id}
           identification={receipts[currentIndex].id}
           doador={receipts[currentIndex].doador.nome}
           endereco={receipts[currentIndex].doador.endereco}
@@ -83,14 +143,18 @@ const MessengerReceipts: React.FC = () => {
           observacao={receipts[currentIndex].doador.observacoes}
           onSave={() => { console.log("onsave"); }}
         />
-        {/* ))} */}
       </Styled.Receipts>
       <Styled.Buttons>
         <button type="button">Emissão de urgência</button>
-        <button type="button">Atualização cadastral</button>
+        <button type="button" onClick={handleClickDonorButton}>Atualização cadastral</button>
       </Styled.Buttons>
       <Styled.Actions>
-        <div><Close fontSize="large" /></div>
+        <div>
+          <Close
+            fontSize="large"
+            onClick={handleCloseClick}
+          />
+        </div>
         <div>
           <Check
             fontSize="large"
@@ -115,6 +179,23 @@ const MessengerReceipts: React.FC = () => {
           &gt;
         </button>
       </Styled.ArrowButtons>
+      <FormDialog
+        open={openDonorForm}
+        onClose={() => setOpenDonorForm(false)}
+        title="Atualizar cadastro do dodador"
+      >
+        <DonorForm
+          currentDonor={currentDonor}
+          onSave={onSaveDonorForm}
+          onDelete={() => { /** empty */ }}
+        />
+      </FormDialog>
+      <Snackbar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        onClose={() => setSnackbarOpen(false)}
+        severity="success"
+      />
     </Styled.Container>
   );
 
