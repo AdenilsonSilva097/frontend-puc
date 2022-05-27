@@ -27,6 +27,8 @@ import { themeAtom } from "./styles/themes";
 import { useWindowSize } from "./hooks/useWindowSize";
 import ReceiptsIssued from "./organisms/ReceiptsIssued";
 import MessengerReceipts from "./organisms/MessengerReceipts";
+import Itinerary from "./molecules/Itinerary";
+import MessengerReport from "./molecules/MessengerReport";
 
 interface PrivateRouteProps {
   redirectTo: string;
@@ -72,8 +74,8 @@ function App() {
             <Route path="reports" element={<Reports />} />
             <Route path="messenger" element={<Messenger />}>
               <Route path="messengerReceipts" element={<MessengerReceipts />} />
-              <Route path="messengerReport" element={<Permissions />} />
-              <Route path="messengerIntinerary" element={<Permissions />} />
+              <Route path="messengerReport" element={<MessengerReport />} />
+              <Route path="messengerIntinerary" element={<Itinerary />} />
             </Route>
             <Route path="permissions" element={<Permissions />} />
           </Route>

@@ -14,4 +14,8 @@ GET http://localhost:3001/receipts
 
 ###
 
+GET http://localhost:3001/donation-protocols
+
+###
+
 GET http://localhost:3001/sector-addresses
