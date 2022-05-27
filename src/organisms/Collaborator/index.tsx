@@ -10,7 +10,7 @@ import CollaboratorForm from "../../molecules/CollaboratorForm";
 
 import isMobile from "../../helpers/IsMobile";
 
-import { Edit, Add } from "../../libraries/mui/icons";
+import { Edit, Add, Print } from "../../libraries/mui/icons";
 import {
   Table, TableHead, TableBody, TableRow, TableCell,
   IconButton, TableContainer
@@ -153,6 +153,9 @@ const Collaborator: React.FC = () => {
       <Styled.FabContainer onClick={() => handleopenCollaboratorForm(null)} size="large">
         <Add fontSize="large" />
       </Styled.FabContainer>
+      <Styled.FabPrint onClick={() => window.print()} size="medium">
+        <Print fontSize="medium" />
+      </Styled.FabPrint>
       <Snackbar
         open={snackbarOpen}
         message={snackbarMessage}
