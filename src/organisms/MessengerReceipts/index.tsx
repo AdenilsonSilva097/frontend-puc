@@ -30,7 +30,7 @@ const MessengerReceipts: React.FC = () => {
       const { data: receiptsData } = await api.get("/receipts");
 
       const collaboratorMessenger = collaboratorsData.find(
-        (collaborator: any) => collaborator.nome.toUpperCase() === loggedUser.name.toUpperCase()
+        (collaborator: any) => collaborator.idUsuario === loggedUser.id
       );
 
       const filteredReceipts = receiptsData.filter(
@@ -63,11 +63,11 @@ const MessengerReceipts: React.FC = () => {
     };
   }, []);
 
-  if (!receipts) {
+  if (receipts?.length === 0) {
     return <div style={{ padding: "10px" }}>Carregando...</div>;
   }
 
-  if (receipts.length === 0) {
+  if (!receipts) {
     return <div style={{ padding: "10px" }}>Nenhuma guia para receber</div>;
   }
 
@@ -145,7 +145,6 @@ const MessengerReceipts: React.FC = () => {
         />
       </Styled.Receipts>
       <Styled.Buttons>
-        <button type="button">Emissão de urgência</button>
         <button type="button" onClick={handleClickDonorButton}>Atualização cadastral</button>
       </Styled.Buttons>
       <Styled.Actions>

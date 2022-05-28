@@ -22,6 +22,7 @@ import * as Styled from "./styles";
 
 interface IFormInputs {
   cargo: string;
+  idUsuario: string;
   permissionGroup: string;
   nome: string;
   telefone: string;
@@ -43,6 +44,7 @@ interface IFormInputs {
 
 const schema = Yup.object().shape({
   cargo: Yup.string().required(),
+  idUsuario: Yup.string().required(),
   permissionGroup: Yup.string().required(),
   nome: Yup.string().required(),
   telefone: Yup.string().required().min(10).max(11),
@@ -72,6 +74,7 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
 
   const [showConfirmDelete, setShowConfirmDelete] = React.useState(false);
   const [permissions, setPermissions] = React.useState<any[]>([]);
+  const [users, setUsers] = React.useState<any[]>([]);
   const [sectors, setSectors] = React.useState<any[]>([]);
 
   const {
@@ -86,6 +89,10 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
     setValue("cargo", newValue);
   };
 
+  const handleUserChange = (newValue: string) => {
+    setValue("idUsuario", newValue);
+  };
+
   const handleSectorChange = (newValue: string) => {
     setValue("setor", newValue);
   };
@@ -97,6 +104,8 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
   const handleSubmitForm: SubmitHandler<IFormInputs> = async (formData: IFormInputs) => {
     try {
       const newCollaborator = { ...formData };
+
+      console.log(newCollaborator);
 
       if (currentCollaborator) {
         await api.patch(`/collaborators/${currentCollaborator.id}`, newCollaborator);
@@ -128,9 +137,11 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
     (async () => {
       const { data: permissionsData } = await api.get("/permission-groups");
       const { data: sectorsData } = await api.get("/sectors");
+      const { data: usersData } = await api.get("/users");
 
       setPermissions(permissionsData);
       setSectors(sectorsData);
+      setUsers(usersData);
     })();
   }, []);
 
@@ -138,6 +149,7 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
   React.useEffect(() => {
     if (currentCollaborator) {
       setValue("cargo", currentCollaborator.cargo);
+      setValue("idUsuario", currentCollaborator.idUsuario);
       setValue("permissionGroup", currentCollaborator.permissionGroup);
       setValue("nome", currentCollaborator.nome);
       setValue("telefone", currentCollaborator.telefone);
@@ -187,6 +199,36 @@ const CollaboratorForm: React.FC<DonorFormProps> = ({ currentCollaborator, onSav
                     && (
                     <FormHelperText>
                       {handleErrorMessage(formErrors.cargo)}
+                    </FormHelperText>
+                    )}
+              </FormControl>
+            )}
+          />
+          <Controller
+            name="idUsuario"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <FormControl size="small" error={!!formErrors.idUsuario} className="field" sx={{ width: "200px" }}>
+                <InputLabel id="permission-select">Usuário</InputLabel>
+                <Select
+                  {...field}
+                  labelId="user-select"
+                  label="Usuário"
+                  error={!!formErrors.idUsuario}
+                  onChange={(e) => handleUserChange(e.target.value)}
+                  size="small"
+                >
+                  {users.map((user) => (
+                    <MenuItem key={user.id} value={user.id}>
+                      {user.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {!!formErrors.idUsuario
+                    && (
+                    <FormHelperText>
+                      {handleErrorMessage(formErrors.idUsuario)}
                     </FormHelperText>
                     )}
               </FormControl>
