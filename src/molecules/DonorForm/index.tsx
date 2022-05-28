@@ -33,7 +33,6 @@ interface IFormInputs {
   cidade: string;
   uf: string;
   bairro: string;
-  setor: string;
   complemento: string;
   dataNascimento: Date | null;
   cpf: string;
@@ -55,7 +54,6 @@ const schema = Yup.object().shape({
   cidade: Yup.string().required(),
   uf: Yup.string().required(),
   bairro: Yup.string().required(),
-  setor: Yup.string().required(),
   complemento: Yup.string(),
   dataNascimento: Yup.date().required().nullable(),
   cpf: Yup.string().required(),
@@ -130,7 +128,6 @@ const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave, onDelete })
       setValue("cidade", currentDonor.cidade);
       setValue("uf", currentDonor.uf);
       setValue("bairro", currentDonor.bairro);
-      setValue("setor", currentDonor.setor);
       setValue("complemento", currentDonor.complemento);
       setValue("dataNascimento", currentDonor.dataNascimento);
       setValue("cpf", currentDonor.cpf);
@@ -352,23 +349,6 @@ const DonorForm: React.FC<DonorFormProps> = ({ currentDonor, onSave, onDelete })
                 variant="outlined"
                 error={!!formErrors.bairro}
                 helperText={handleErrorMessage(formErrors.bairro)}
-                className="field"
-                size="small"
-              />
-            )}
-          />
-          <Controller
-            name="setor"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                {...field}
-                autoComplete="off"
-                label="Setor"
-                variant="outlined"
-                error={!!formErrors.setor}
-                helperText={handleErrorMessage(formErrors.setor)}
                 className="field"
                 size="small"
               />
