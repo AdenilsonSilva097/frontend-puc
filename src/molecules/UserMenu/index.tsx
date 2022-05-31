@@ -23,8 +23,8 @@ const UserMenu: React.FC<UserMenuProps> = ({ onClose }) => {
   const [userIsAdmin, setUserIsAdmin] = React.useState(false);
 
   const handleLogout = () => {
-    navigate("/");
     localStorage.removeItem("@user");
+    navigate("/");
     onClose();
   };
 

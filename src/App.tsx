@@ -29,6 +29,9 @@ import ReceiptsIssued from "./organisms/ReceiptsIssued";
 import MessengerReceipts from "./organisms/MessengerReceipts";
 import Itinerary from "./molecules/Itinerary";
 import MessengerReport from "./molecules/MessengerReport";
+import ReceiptsPerStatus from "./atoms/ReceiptsPerStatus";
+import DonorsPerMostFavorableDate from "./atoms/DonorsPerMostFavorableDate";
+import CollaboratorsPerPosition from "./atoms/CollaboratorsPerPosition";
 
 interface PrivateRouteProps {
   redirectTo: string;
@@ -71,7 +74,11 @@ function App() {
               <Route path="newIssue" element={<GenerateReceipts />} />
               <Route path="issued" element={<ReceiptsIssued />} />
             </Route>
-            <Route path="reports" element={<Reports />} />
+            <Route path="reports" element={<Reports />}>
+              <Route path="receiptsReport" element={<ReceiptsPerStatus />} />
+              <Route path="donorsPerMostFavorableDate" element={<DonorsPerMostFavorableDate />} />
+              <Route path="collaboratorsPerPosition" element={<CollaboratorsPerPosition />} />
+            </Route>
             <Route path="messenger" element={<Messenger />}>
               <Route path="messengerReceipts" element={<MessengerReceipts />} />
               <Route path="messengerReport" element={<MessengerReport />} />

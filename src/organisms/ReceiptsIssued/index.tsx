@@ -8,7 +8,7 @@ import isMobile from "../../helpers/IsMobile";
 
 import FormDialog from "../../molecules/FormDialog";
 
-import { Delete } from "../../libraries/mui/icons";
+import { Delete, Print } from "../../libraries/mui/icons";
 import {
   Table, TableHead, TableBody, TableRow, TableCell,
   IconButton, TableContainer
@@ -151,6 +151,9 @@ const ReceiptsIssued: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Styled.FabPrint onClick={() => window.print()} size="large">
+        <Print fontSize="large" />
+      </Styled.FabPrint>
       <Snackbar
         open={snackbarOpen}
         message={snackbarMessage}
