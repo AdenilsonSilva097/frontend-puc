@@ -73,7 +73,7 @@ const Sidebar: React.FC = () => {
       <EmpatieseLogotipo color="secondary" />
       <SidebarMenusContainer>
         { currentApplications.length === 0
-          && <div style={{ color: "white" }}>Aguarde...</div>}
+          && <div style={{ color: "white", paddingLeft: "10px" }}>Aguarde...</div>}
 
         {currentApplications.map((application: any) => {
 

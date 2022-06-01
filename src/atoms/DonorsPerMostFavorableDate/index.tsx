@@ -42,7 +42,7 @@ const DonorsPerMostFavorableDate: React.FC = () => {
   }, []);
 
   if (receipts.length === 0) {
-    return <div>Carregando...</div>;
+    return <div style={{ padding: "10px" }}>Carregando...</div>;
   }
 
   return (

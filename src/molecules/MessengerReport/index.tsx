@@ -19,7 +19,7 @@ const MessengerReport: React.FC = () => {
       const { data: receiptsData } = await api.get("/receipts");
 
       const collaboratorMessenger = collaboratorsData.find(
-        (collaborator: any) => collaborator.nome.toUpperCase() === loggedUser.name.toUpperCase()
+        (collaborator: any) => collaborator.idUsuario === loggedUser.id
       );
 
       const filteredReceipts = receiptsData.filter(

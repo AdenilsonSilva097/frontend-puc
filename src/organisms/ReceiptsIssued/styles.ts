@@ -18,7 +18,7 @@ export const FabPrint = styled(Fab)`
   }
 
   @media (max-width: ${windowWidth.mobile.large}) {
-    right: 100px !important;
+    right: 20px !important;
     bottom: 10px !important;
     background-color: ${(props) => props.theme.colors.secondary} !important;
   }

@@ -100,7 +100,7 @@ const FormLogin: React.FC = () => {
   };
 
   if (loading) {
-    return <div>Carregando...</div>;
+    return <div style={{ padding: "10px" }}>Carregando...</div>;
   }
 
   return (
