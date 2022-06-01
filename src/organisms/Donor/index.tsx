@@ -104,8 +104,6 @@ const Donor: React.FC = () => {
           <TableHead sx={{ position: "sticky", top: "0", backgroundColor: "white" }}>
             <TableRow>
               <TableCell sx={{ fontWeight: "bold" }} align="left">Nome</TableCell>
-              {!isMobile()
-                && <TableCell sx={{ fontWeight: "bold" }} align="left">Setor</TableCell>}
               <TableCell sx={{ fontWeight: "bold" }} align="left">Valor</TableCell>
               <TableCell sx={{ fontWeight: "bold" }} align="left">Melhor data</TableCell>
               <TableCell sx={{ fontWeight: "bold" }} align="left" />
@@ -124,8 +122,6 @@ const Donor: React.FC = () => {
               return (
                 <TableRow key={donor.id}>
                   <TableCell align="left">{donor.nome}</TableCell>
-                  {!isMobile()
-                    && <TableCell align="left">{donor.setor}</TableCell>}
                   <TableCell align="left">{formattedValue}</TableCell>
                   <TableCell align="left">{donor.melhorData}</TableCell>
                   <TableCell align="right">
